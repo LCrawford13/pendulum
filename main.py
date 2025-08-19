@@ -5,9 +5,12 @@ import matplotlib.pyplot as plt
 
 pen = Pendulum()
 
-fat = sim.simulatePendulum(pen)
-sim.producePlots(pen, fat)
+f = 30
 
+
+
+fat = sim.simulatePendulum(pen, frames = f)
+ani = sim.produceAnimation(pen, fat, frames = f)
 
 # plt.plot(1, 2, 'ro')
 # plt.ylabel = "FART"
