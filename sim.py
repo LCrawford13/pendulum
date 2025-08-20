@@ -3,35 +3,47 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-def RungeKutta(func, args):
-    newState = func()
-
-def dESimplePendulum(length, angle, g = 9.81):
-    return -np.sin(angle) * g/length
-
-def simulatePendulum(pendulum, frames = 60, t = 0.01, g = 9.81):
-    positions = [[pendulum.massCoor[0]], [pendulum.massCoor[1]]]
-    #initialAngle = np.tan(pendulum.massCoor[0]/pendulum.massCoor[1])
+def RungeKutta(func, h, oldState, consts, *args):
+    a = func(consts, *args)
+    b = func(consts, *args + a*h/2)
+    c = func(consts, *args + b*h/2)
+    d = func(consts, *args + c*h)
     
-    initialAngle = np.pi/2
-    for i in range(1, frames):
-        
-        
-        angle = initialAngle * np.cos(t * np.sqrt(g/pendulum.length))
-        initialAngle = np.copy(angle)
-        
-        #angle = t * np.sqrt(g / pendulum.length) - initialAngle
+    newState = oldState + (a + 2*b + 2*c + d)*h/6
+    
+    return newState
 
-        # if positions[0][i - 1] > 0 and positions[1][i - 1] > 0:
-        #     angle -= np.pi
-        # elif positions[0][i - 1] <= 0 and positions[1][i - 1] > 0:
-        #     angle = np.pi - angle
-        # elif positions[0][0] > 0 and positions[0][1] <= 0:
-        #     angle = 2*np.pi - angle
-            
+def dESimplePendulum(consts, angle):
+    return -np.sin(angle) * consts[0]/consts[1]
+
+def simulatePendulum(pendulum, frames = 60, intervalTime = 0.1, g = 9.81):
+    positions = [[pendulum.massCoor[0]], [pendulum.massCoor[1]]]
+    initialAngle = np.tan(pendulum.massCoor[0]/pendulum.massCoor[1])
+    time = 0
+    initialAngle = -np.pi/2
+    for i in range(1, frames):
+        angle = RungeKutta(dESimplePendulum, intervalTime, initialAngle,
+                           [g, pendulum.length], initialAngle)
+        #angle = initialAngle * np.cos(time * np.sqrt(g/pendulum.length))
+        
+        #angle = (time - intervalTime) * np.sqrt(g / pendulum.length) - initialAngle
+        initialAngle = np.copy(angle)
+
+        if positions[0][i - 1] > 0 and positions[1][i - 1] > 0:
+            x = pendulum.length * np.sin(angle)
+            y = pendulum.length * np.cos(angle)
+        elif positions[0][i - 1] < 0 and positions[1][i - 1] > 0:
+            x = pendulum.length * np.cos(angle)
+            y = pendulum.length * np.sin(angle)
+        elif positions[0][0] > 0 and positions[0][1] < 0:
+            x = pendulum.length * np.cos(angle)
+            y = pendulum.length * np.sin(angle)
+        else:
+            x = pendulum.length * np.cos(angle)
+            y = pendulum.length * np.sin(angle)
         x = pendulum.length * np.sin(angle)
         y = pendulum.length * np.cos(angle)
-
+        print(x)
         positions[0].append(x)
         positions[1].append(y)
         
@@ -42,12 +54,12 @@ def simulatePendulum(pendulum, frames = 60, t = 0.01, g = 9.81):
         #     unique = np.unique(recent, axis = 0)
         #     if len(unique) == 1:
         #         changing = False
-        
-        t += t
+
+        time += intervalTime
 
     return positions
 
-def produceAnimation(pendulum, positions, frames = 60):
+def produceAnimation(pendulum, positions, frames = 60, interval = 100):
     fig, ax = plt.subplots()
 
     m = int(pendulum.length + 0.2*pendulum.length)
@@ -64,7 +76,8 @@ def produceAnimation(pendulum, positions, frames = 60):
         plt.xlim(-m, m)
         plt.ylim(-m, m)
     
-    ani = animation.FuncAnimation(fig = fig, func = update, frames = frames)
+    ani = animation.FuncAnimation(fig = fig, func = update,
+                                  frames = frames, interval = interval)
     plt.show()
     
     return ani

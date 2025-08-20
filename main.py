@@ -5,13 +5,11 @@ import matplotlib.pyplot as plt
 
 pen = Pendulum()
 
-f = 30
+f = 80*10
+interval = 0.0125
 
 
+pos = sim.simulatePendulum(pen, frames = f, intervalTime= interval)
+ani = sim.produceAnimation(pen, pos, frames = f, interval = interval * 1000)
 
-fat = sim.simulatePendulum(pen, frames = f)
-ani = sim.produceAnimation(pen, fat, frames = f)
 
-# plt.plot(1, 2, 'ro')
-# plt.ylabel = "FART"
-# plt.show()
