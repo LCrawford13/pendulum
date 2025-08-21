@@ -1,7 +1,6 @@
 from Pendulum import Pendulum
-import numpy as np
 import sim
-import matplotlib.pyplot as plt
+
 
 pen = Pendulum()
 
