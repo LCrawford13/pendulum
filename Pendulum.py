@@ -3,63 +3,43 @@ import numpy as np
 
 class Pendulum:
     """
-    A class representing one mass on a string, a pendulum. Contains all
-    information required to simulate one, all units are SI. All numbers are
-    numpy float64.
+    A class representing a point mass on a rigid string, a pendulum.
+    Contains all information required to simulate one, all units are SI.
+    All numbers are numpy float64.
 
     Parameters
     ----------
-    length : numpy float64
+    length : numpy float64, optional
         Length of pendulum string.
         The default is 10.
-    pendCoor : numpy ndarray of numpy float64
+    angle : numpy float64, optional
+        Angle of pendulum, where straight down is zero, left is -pi/2, right
+        is pi/2, in radians.
+        The default is -pi/2.
+    angularVelocity : numpy float64, optional
+        Angular velocity of pendulum mass.
+        The default is 0.
+    pendCoor : numpy ndarray of numpy float64, optional
         The coordinates where the string originates from.
         The default is np.array([0, 0], dtype = 'float64').
-    massCoor : numpy ndarray of numpy float64
-        The coordinates of the mass on string.
-        The default is np.array([-10, 0], dtype = 'float64').
     """
 
     def __init__(
             self,
-            length = None,
-            pendCoor = np.array([0, 0], dtype = 'float64'),
-            massCoor = None
+            length = 1,
+            angle = -np.pi/2,
+            angularVelocity = 0,
+            pendCoor = np.array([0, 0], dtype = 'float64')
             ):
+        self.length = self.convertFloat(length)
+        self.angle = self.convertFloat(angle)
+        self.angularVelocity = self.convertFloat(angularVelocity)
         self.pendCoor = self.convertArray(pendCoor)
-
-        # Allows pendulum length and the initial mass coordinates to be
-        # dynamically determined depending on whether the user specified
-        # the values for the two variables.
-        lengthBool = (length is None)
-        massCoorBool = (massCoor is None)
-        if massCoorBool and lengthBool:
-            self.length = np.float64(10)
-            self.massCoor = np.array([-10 + self.pendCoor[0],
-                                     self.pendCoor[1]],
-                                     dtype = 'float64')
-        elif massCoorBool and not lengthBool:
-            self.length = np.abs(self.convertFloat(length))
-            self.massCoor = np.array([-self.length + self.pendCoor[0],
-                                     self.pendCoor[1]],
-                                     dtype = 'float64')
-        elif not massCoorBool and lengthBool:
-            self.massCoor = self.convertArray(massCoor)
-            self.length = np.abs(np.float64(np.linalg.norm(
-                                self.pendCoor - self.massCoor)))
-        else:
-            self.massCoor = self.convertArray(massCoor)
-            self.length = np.abs(self.convertFloat(length))
-
-            calcLength = np.linalg.norm(self.pendCoor - self.massCoor)
-            if calcLength != self.length:
-                raise ValueError("Specified length of pendulum "
-                                 f"({self.pendLength}) doesn't match "
-                                 f"calculated length ({calcLength}).")
 
     def __str__(self):
         return (f"Pendulum Length: {self.length}, "
-                f"Mass Coordinates: {self.massCoor}, "
+                f"Pendulum Angle: {self.massAngle}, "
+                f"Pendulum Angular Velocity: {self.angularVelocity}"
                 f"Pendulum Coordinates: {self.pendCoor}, ")
 
     @staticmethod

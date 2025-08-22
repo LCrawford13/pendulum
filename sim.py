@@ -4,96 +4,205 @@ import matplotlib.animation as animation
 
 
 def RungeKutta(func1, func2, h, oldState1, oldState2, consts):
+    """
+    Runge Kutta algorithm to find numerical solutions to differential
+    equations of a certain form. This implementation is currently a less
+    general form of the algorithm, where the differential equation must be of
+    the form d(x)/dt = f(x). Constants like g or the lenght of a pendulum, can
+    be passed into func1 and func2 via the consts parameter.
+
+    Parameters
+    ----------
+    func1 : function
+        Function to calculate newsState1 from consts and oldState2. Most
+        likely, f(x), the differential equation itself.
+    func2 : function
+        Function to calculate newsState2 from consts and oldState1. Most
+        likely, just x.
+    h : float
+        Time interval over which oldState1 and oldState2 are changing,
+        in seconds.
+    oldState1 : float
+        Most likely x.
+    oldState2 : float
+        Most likely d(x)/dt.
+    consts : list
+        List of constants which may want to be changed, for example the length
+        of a pendulum. Will be passed into func1 and func2.
+
+    Returns
+    -------
+    newState1 : float
+        Most likely x, after time period h.
+    newState2 : TYPE
+        Most likely d(x)/dt after time period h.
+    """
     a1 = func1(consts, oldState1)
     a2 = func2(consts, oldState2)
-    
+
     b1 = func1(consts, oldState1 + a2*h/2)
     b2 = func2(consts, oldState2 + a1*h/2)
-    
+
     c1 = func1(consts, oldState1 + b2*h/2)
     c2 = func2(consts, oldState2 + b1*h/2)
-    
+
     d1 = func1(consts, oldState1 + c2*h)
     d2 = func2(consts, oldState2 + c1*h)
-    
-    newState1 = oldState1 + (a1 + 2*b1 + 2*c1 + d1)*h/6
-    newState2 = oldState2 + (a2 + 2*b2 + 2*c2 + d2)*h/6
-    
+
+    newState1 = oldState1 + (a2 + 2*b2 + 2*c2 + d2)*h/6
+    newState2 = oldState2 + (a1 + 2*b1 + 2*c1 + d1)*h/6
+
     return newState1, newState2
 
+
 def dESimplePendulumAngularVelocity(consts, angle):
-    temp = -np.sin(angle) * consts[0]/consts[1]
-    return temp
+    """
+    Represents the differential equation for a simple pendulum, the derivate
+    of the angle with respect to time, so the angular velocity (omega), equals
+    the negative of g divided by the length of the pendulum (L), all
+    multiplied by the sine of the angle (theta):
+    d(omega)/dt = -sin(theta) * g/L
+
+    Parameters
+    ----------
+    consts : list
+        Holds variables for g and the length of the pendulum, both in SI units.
+        g at index 0, and length at index 1.
+    angle : float
+        The initial angle in radians.
+
+    Returns
+    -------
+    float
+        Returns the new angular velocity.
+    """
+    return -np.sin(angle) * consts[0]/consts[1]
+
 
 def dESimplePendulumAngle(consts, angularVelocity):
+    """
+    Exists purely to allow the RungeKutta function to be more general.
+
+    Parameters
+    ----------
+    consts : list
+        Not used, purely here to make RungeKutta more general.
+    angularVelocity : float
+        The initial angular velocity.
+
+    Returns
+    -------
+    angularVelocity : float
+        The initial angular velocity.
+    """
     return angularVelocity
 
-def simulatePendulum(pendulum, frames = 60, intervalTime = 0.1, g = 9.81):
-    positions = [[pendulum.massCoor[0]], [pendulum.massCoor[1]]]
-    initialAngle = np.pi/2
-    initialAngularVelocity = 0
+
+def simulatePendulum(pendulum,
+                     frames = 80*10,
+                     intervalTime = 0.0125,
+                     g = 9.81):
+    """
+    Simulates the motion of a simple pendulum without a damping or driving
+    force, uses the Runge Kutta algorithm to solve the differential equation
+    for a simple pendulum. Produces x and y coordinates for the motion of the
+    pendulum.
+
+    Parameters
+    ----------
+    pendulum : Pendulum class
+        A class representing a point mass attached to a rigid string, the
+        pendulum whose motion this function simulates.
+    frames : int, optional
+        The number of frames to be calculated, the number of steps.
+        The default is 80*10.
+    intervalTime : float, optional
+        The time bewteen calculations, in seconds.
+        The default is 0.0125.
+    g : float, optional
+        The gravitational acceleration in SI units.
+        The default is 9.81.
+
+    Returns
+    -------
+    positions : list
+        List of lists, the list at index 0 contains the x coordinates of
+        the motion of the pendulum, the list at index 1 contains the y
+        coordinates.
+    """
+    positions = [[], []]
+
     for i in range(0, frames):
-        angle, angularVelocity = RungeKutta(dESimplePendulumAngularVelocity,
-                           dESimplePendulumAngle,
-                           intervalTime, initialAngle, 
-                           initialAngularVelocity,
-                           [g, pendulum.length])
-        print(angularVelocity)
-        
+        x = pendulum.length * np.sin(pendulum.angle)
+        y = -pendulum.length * np.cos(pendulum.angle)
+        # Negative ensures that gravity visually appears to act down, when
+        # plotted.
 
-        # if positions[0][i - 1] > 0 and positions[1][i - 1] > 0:
-        #     x = pendulum.length * np.sin(angle)
-        #     y = pendulum.length * np.cos(angle)
-        # elif positions[0][i - 1] < 0 and positions[1][i - 1] > 0:
-        #     x = pendulum.length * np.cos(angle)
-        #     y = pendulum.length * np.sin(angle)
-        # elif positions[0][0] > 0 and positions[0][1] < 0:
-        #     x = pendulum.length * np.cos(angle)
-        #     y = pendulum.length * np.sin(angle)
-        # else:
-        #     x = pendulum.length * np.cos(angle)
-        #     y = pendulum.length * np.sin(angle)
-        x = pendulum.length * np.cos(angle)
-        y = pendulum.length * np.sin(angle)
-
-        initialAngle = np.copy(angle)
-        initialAngularVelocity = np.copy(angularVelocity)
-        
         positions[0].append(x)
         positions[1].append(y)
-        
-        # Designed for if there is air resistance, but this method can't
-        # calculate air resistance.
-        # if len(positions) > 9:
-        #     recent = positions[-10:]
-        #     unique = np.unique(recent, axis = 0)
-        #     if len(unique) == 1:
-        #         changing = False
 
+        pendulum.angle, pendulum.angularVelocity = RungeKutta(
+            dESimplePendulumAngularVelocity, dESimplePendulumAngle,
+            intervalTime, pendulum.angle, pendulum.angularVelocity,
+            [g, pendulum.length])
 
     return positions
 
-def produceAnimation(pendulum, positions, frames = 60, interval = 100):
-    fig, ax = plt.subplots()
 
-    m = int(pendulum.length + 0.2*pendulum.length)
+def produceAnimation(pendulum, positions, frames = 80*10, interval = 12.5):
+    """
+    Creates an animation from the x and y coordinates produced by the
+    simulatePendulum function. The animation will appear with both a mass and
+    a string depicted, with a x and y axis.
+
+    Parameters
+    ----------
+    pendulum : Pendulum class
+        A class representing a point mass attached to a rigid string, the
+        pendulum whose motion is shown in the animation.
+    positions : list
+        List of lists, the list at index 0 contains the x coordinates of
+        the motion of the pendulum, the list at index 1 contains the y
+        coordinates.
+    frames : int, optional
+        The total number of frames in the animation.
+        The default is 80*10.
+    interval : float, optional
+        The time bewteen frames, in seconds.
+        The default is 0.0125.
+
+    Returns
+    -------
+    ani : matplotlib.animation.TimedAnimation
+        The animation depicting the motion of the pendulum.
+    """
+    fig, ax = plt.subplots(figsize = (5, 5))
+    # Specifiying figsize ensures that plot is square when opened in Spyder
+    # IDE.
+
+    m = pendulum.length + 0.2*pendulum.length
+    # Used to apply limits to the plots used in the animation, so that the
+    # pendulum is fully within the plot.
 
     def update(frame):
         ax.clear()
-        
-        ax.scatter(positions[0][frame], positions[1][frame], 
+        # Removes previous positions of the pendulum from the animation.
+
+        ax.scatter(positions[0][frame], positions[1][frame],
                    color = 'black', zorder = 2)
         ax.plot([positions[0][frame], pendulum.pendCoor[0]],
-                  [positions[1][frame], pendulum.pendCoor[1]],
-                  color = 'brown', linestyle = '-', zorder = 1)
-        
+                [positions[1][frame], pendulum.pendCoor[1]],
+                color = 'brown', linestyle = '-', zorder = 1)
+        # zorder ensures that the mass appears on top of the string, it would
+        # look weird otherwise.
+
         plt.xlim(-m, m)
         plt.ylim(-m, m)
-    
+
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = frames, interval = interval)
     plt.show()
-    
-    return ani
-    
+    # Makes sure that the animation appears when using Spyder IDE. Not
+    # necessary if the animation is being saved to a file.
 
+    return ani
