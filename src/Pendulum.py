@@ -27,20 +27,34 @@ class Pendulum:
     def __init__(
             self,
             length = 1,
-            angle = -np.pi/2,
+            angle = -np.pi / 2,
             angularVelocity = 0,
-            pendCoor = np.array([0, 0], dtype = 'float64')
-            ):
+            pendCoor = np.array([0, 0], dtype = 'float64')):
+
         self.length = self.convertFloat(length)
         self.angle = self.convertFloat(angle)
         self.angularVelocity = self.convertFloat(angularVelocity)
         self.pendCoor = self.convertArray(pendCoor)
+
+        self.normaliseAngle()
 
     def __str__(self):
         return (f"Pendulum Length: {self.length}, "
                 f"Pendulum Angle: {self.massAngle}, "
                 f"Pendulum Angular Velocity: {self.angularVelocity}"
                 f"Pendulum Coordinates: {self.pendCoor}, ")
+
+    def normaliseAngle(self):
+        """
+        Checks self.angle to see if it is within -pi to pi (inclusive),
+        if it isn't it'll add or subtract two pi until it is.
+        """
+        while ((greater := self.angle > np.pi) or
+               (lesser := self.angle < -np.pi)):
+            if greater:
+                self.angle -= 2 * np.pi
+            elif lesser:
+                self.angle += 2 * np.pi
 
     @staticmethod
     def convertFloat(fl):

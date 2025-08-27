@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import matplotlib as mpl
+
 
 def RungeKutta(func1, func2, h, oldState1, oldState2, consts):
     """
@@ -40,17 +40,17 @@ def RungeKutta(func1, func2, h, oldState1, oldState2, consts):
     a1 = func1(consts, oldState1)
     a2 = func2(consts, oldState2)
 
-    b1 = func1(consts, oldState1 + a2*h/2)
-    b2 = func2(consts, oldState2 + a1*h/2)
+    b1 = func1(consts, oldState1 + a2 * h / 2)
+    b2 = func2(consts, oldState2 + a1 * h / 2)
 
-    c1 = func1(consts, oldState1 + b2*h/2)
-    c2 = func2(consts, oldState2 + b1*h/2)
+    c1 = func1(consts, oldState1 + b2 * h / 2)
+    c2 = func2(consts, oldState2 + b1 * h / 2)
 
-    d1 = func1(consts, oldState1 + c2*h)
-    d2 = func2(consts, oldState2 + c1*h)
+    d1 = func1(consts, oldState1 + c2 * h)
+    d2 = func2(consts, oldState2 + c1 * h)
 
-    newState1 = oldState1 + (a2 + 2*b2 + 2*c2 + d2)*h/6
-    newState2 = oldState2 + (a1 + 2*b1 + 2*c1 + d1)*h/6
+    newState1 = oldState1 + (a2 + 2 * b2 + 2 * c2 + d2) * h / 6
+    newState2 = oldState2 + (a1 + 2 * b1 + 2 * c1 + d1) * h / 6
 
     return newState1, newState2
 
@@ -76,7 +76,7 @@ def dESimplePendulumAngularVelocity(consts, angle):
     float
         Returns the new angular velocity.
     """
-    return -np.sin(angle) * consts[0]/consts[1]
+    return -np.sin(angle) * consts[0] / consts[1]
 
 
 def dESimplePendulumAngle(consts, angularVelocity):
@@ -97,22 +97,6 @@ def dESimplePendulumAngle(consts, angularVelocity):
     """
     return angularVelocity
 
-def normaliseAngle(angle):
-    # Move into pendulum class.
-    
-    changed = False
-    
-    while ((greater := angle > np.pi) or 
-           (lesser := angle < -np.pi)):
-        if greater:
-            angle -= 2*np.pi
-            print(angle)
-        elif lesser:
-            angle += 2*np.pi
-        
-        changed = True
-    
-    return angle, changed
 
 def simulatePendulum(pendulum,
                      intervalTime = 0.0125,
@@ -149,13 +133,19 @@ def simulatePendulum(pendulum,
                          f"instead {intervalTime} seconds.")
 
     positions = [[], []]
-    pendulum.angle, changed = normaliseAngle(pendulum.angle)
+    pendulum.normaliseAngle()
     initialAngle = np.copy(pendulum.angle)
     initialAngularVelocity = np.copy(pendulum.angularVelocity)
 
     loop = False
     approaching = False
+
+    # This indicates the distance between the pendulum's current angle and
+    # the initial angle.
     newDistance = 0
+
+    # This indicates how many times the pendulum has reached the maximum angle,
+    # if there is one.
     passedMax = 0
     passedPi = 0
     while not loop:
@@ -163,9 +153,9 @@ def simulatePendulum(pendulum,
         oldAngularVelocity = np.copy(pendulum.angularVelocity)
 
         x = pendulum.length * np.sin(pendulum.angle)
-        y = -pendulum.length * np.cos(pendulum.angle)
         # Negative ensures that gravity visually appears to act down when
         # plotted.
+        y = -pendulum.length * np.cos(pendulum.angle)
 
         positions[0].append(x)
         positions[1].append(y)
@@ -179,17 +169,18 @@ def simulatePendulum(pendulum,
         # equal to -pi. Used to determine when to stop the simulation, because
         # for certain situations the angle will continually increase, this
         # stops that.
-        pendulum.angle, changed = normaliseAngle(pendulum.angle)
-        if changed and np.abs(initialAngle) == np.pi:
+        tempAngle = np.copy(pendulum.angle)
+        pendulum.normaliseAngle()
+        if tempAngle != pendulum.angle and np.abs(initialAngle) == np.pi:
             passedPi += 1
 
-        # Determines when one full period has been completed, and stops 
+        # Determines when one full period has been completed, and stops
         # making new frames once this occurs.
         oldDistance = np.copy(newDistance)
         if initialAngularVelocity == 0 or passedMax == 2:
             newDistance = np.abs(pendulum.angle - initialAngle)
-            if ((initialAngle == 0 or np.abs(initialAngle) == np.pi) and 
-                passedMax != 2):
+            if ((initialAngle == 0 or np.abs(initialAngle) == np.pi) and
+               passedMax != 2):
                 loop = True
             elif newDistance < oldDistance:
                 approaching = True
@@ -200,12 +191,16 @@ def simulatePendulum(pendulum,
         elif ((oldAngularVelocity >= 0 and pendulum.angularVelocity < 0) or
               (oldAngularVelocity <= 0 and pendulum.angularVelocity > 0)):
             passedMax += 1
+        # For if the pendulum is completing full circles rather than moving
+        # back and forth, but if the inital angle is at pi.
         elif passedPi > 1 and np.abs(initialAngle) == np.pi:
             loop = True
+        # For if the pendulum is completing full circles rather than moving
+        # back and forth, but if the inital angle isn't at pi.
         elif (((oldAngle <= initialAngle and pendulum.angle > initialAngle) or
-              (oldAngle >= initialAngle and pendulum.angle < initialAngle)) 
+              (oldAngle >= initialAngle and pendulum.angle < initialAngle))
               and np.abs(initialAngle) != np.pi):
-            if passedPi > 1:    
+            if passedPi > 1:
                 loop = True
             else:
                 passedPi += 1
@@ -217,7 +212,7 @@ def simulatePendulum(pendulum,
     return positions
 
 
-def produceAnimation(pendulum, positions, frames = 80*10, interval = 12.5):
+def produceAnimation(pendulum, positions, interval = 12.5):
     """
     Creates an animation from the x and y coordinates produced by the
     simulatePendulum function. The animation will appear with both a mass and
@@ -234,44 +229,41 @@ def produceAnimation(pendulum, positions, frames = 80*10, interval = 12.5):
         coordinates.
     interval : float, optional
         The time bewteen frames, in milliseconds.
-        The default is 0.0125.
+        The default is 0.0125, so 80fps.
 
     Returns
     -------
     ani : matplotlib.animation.TimedAnimation
         The animation depicting the motion of the pendulum.
     """
-    fig, ax = plt.subplots(figsize = (5, 5))
     # Specifiying figsize ensures that plot is square when opened in Spyder
     # IDE.
+    fig, ax = plt.subplots(figsize = (5, 5))
 
-    m = pendulum.length + 0.2*pendulum.length
     # Used to apply limits to the plots used in the animation, so that the
     # pendulum is fully within the plot.
+    m = pendulum.length + 0.2 * pendulum.length
 
     def update(frame):
-        ax.clear()
         # Removes previous positions of the pendulum from the animation.
+        ax.clear()
 
+        # zorder ensures that the mass appears on top of the string, it would
+        # look weird otherwise.
         ax.scatter(positions[0][frame], positions[1][frame],
                    color = 'black', zorder = 2)
         ax.plot([positions[0][frame], pendulum.pendCoor[0]],
                 [positions[1][frame], pendulum.pendCoor[1]],
                 color = 'brown', linestyle = '-', zorder = 1)
-        # zorder ensures that the mass appears on top of the string, it would
-        # look weird otherwise.
 
         plt.xlim(-m, m)
         plt.ylim(-m, m)
 
     ani = animation.FuncAnimation(fig = fig, func = update,
-                                  frames = len(positions[0]), interval = interval)
+                                  frames = len(positions[0]),
+                                  interval = interval)
     plt.show()
+
     # Makes sure that the animation appears when using Spyder IDE. Not
     # necessary if the animation is being saved to a file.
-
-    mpl.rcParams['animation.ffmpeg_path'] = (r'E:\\Programs\\ffmpeg'
-                                             '\\bin\\ffmpeg.exe')
-    #ani.save("file2.mp4")
-
     return ani
