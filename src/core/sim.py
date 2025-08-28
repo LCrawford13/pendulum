@@ -100,7 +100,8 @@ def dESimplePendulumAngle(consts, angularVelocity):
 
 def simulatePendulum(pendulum,
                      intervalTime = 0.0125,
-                     g = 9.81):
+                     g = 9.81,
+                     maxFrames = 2000):
     """
     Simulates the motion of a simple pendulum without a damping or driving
     force, uses the Runge Kutta algorithm to solve the differential equation
@@ -118,6 +119,10 @@ def simulatePendulum(pendulum,
     g : float, optional
         The gravitational acceleration in SI units.
         The default is 9.81.
+    maxFrames : int, optional
+        The maximum number of frames to simulate, only used in backup for when
+        the period can't be determined.
+        The default is 2000.
 
     Returns
     -------
@@ -138,11 +143,6 @@ def simulatePendulum(pendulum,
     initialAngularVelocity = np.copy(pendulum.angularVelocity)
 
     loop = False
-    approaching = False
-
-    # This indicates the distance between the pendulum's current angle and
-    # the initial angle.
-    newDistance = 0
 
     # This indicates how many times the pendulum has reached the maximum angle,
     # if there is one.
@@ -176,37 +176,29 @@ def simulatePendulum(pendulum,
 
         # Determines when one full period has been completed, and stops
         # making new frames once this occurs.
-        oldDistance = np.copy(newDistance)
-        if initialAngularVelocity == 0 or passedMax == 2:
-            newDistance = np.abs(pendulum.angle - initialAngle)
-            if ((initialAngle == 0 or np.abs(initialAngle) == np.pi) and
-               passedMax != 2):
+        if initialAngularVelocity == 0:
+            if initialAngle == 0 or np.abs(initialAngle) == np.pi or g == 0:
                 loop = True
-            elif newDistance < oldDistance:
-                approaching = True
-            else:
-                if approaching:
+            elif ((oldAngularVelocity >= 0 and pendulum.angularVelocity < 0) or
+                  (oldAngularVelocity <= 0 and pendulum.angularVelocity > 0)):
+                passedMax += 1
+                if passedMax >= 3:
                     loop = True
-                approaching = False
-        elif ((oldAngularVelocity >= 0 and pendulum.angularVelocity < 0) or
-              (oldAngularVelocity <= 0 and pendulum.angularVelocity > 0)):
-            passedMax += 1
-        # For if the pendulum is completing full circles rather than moving
-        # back and forth, but if the inital angle is at pi.
-        elif passedPi > 1 and np.abs(initialAngle) == np.pi:
-            loop = True
-        # For if the pendulum is completing full circles rather than moving
-        # back and forth, but if the inital angle isn't at pi.
-        elif (((oldAngle <= initialAngle and pendulum.angle > initialAngle) or
-              (oldAngle >= initialAngle and pendulum.angle < initialAngle))
-              and np.abs(initialAngle) != np.pi):
-            if passedPi > 1:
+        elif initialAngularVelocity != 0:
+            if (np.abs(initialAngle) != np.pi and
+                ((oldAngle <= initialAngle and pendulum.angle > initialAngle)
+                 or (oldAngle >= initialAngle and
+                     pendulum.angle < initialAngle))):
+
+                if passedPi > 1:
+                    loop = True
+                else:  # ALter this?
+                    passedPi += 1
+            elif passedPi > 1:
                 loop = True
-            else:
-                passedPi += 1
         else:
             # Safeguard if other statements fail.
-            if len(positions[0]) == 2000:
+            if len(positions[0]) == maxFrames:
                 loop = True
 
     return positions

@@ -10,7 +10,7 @@ class Pendulum:
     Parameters
     ----------
     length : numpy float64, optional
-        Length of pendulum string.
+        Length of pendulum string, should be positive.
         The default is 10.
     angle : numpy float64, optional
         Angle of pendulum, where straight down is zero, left is -pi/2, right
@@ -31,6 +31,9 @@ class Pendulum:
             angularVelocity = 0,
             pendCoor = np.array([0, 0], dtype = 'float64')):
 
+        if np.float64(length) == 0:
+            raise ValueError("The length of a pendulum can't be zero.")
+
         self.length = self.convertFloat(length)
         self.angle = self.convertFloat(angle)
         self.angularVelocity = self.convertFloat(angularVelocity)
@@ -40,9 +43,9 @@ class Pendulum:
 
     def __str__(self):
         return (f"Pendulum Length: {self.length}, "
-                f"Pendulum Angle: {self.massAngle}, "
-                f"Pendulum Angular Velocity: {self.angularVelocity}"
-                f"Pendulum Coordinates: {self.pendCoor}, ")
+                f"Pendulum Angle: {self.angle}, "
+                f"Pendulum Angular Velocity: {self.angularVelocity}, "
+                f"Pendulum Coordinates: {self.pendCoor}.")
 
     def normaliseAngle(self):
         """
