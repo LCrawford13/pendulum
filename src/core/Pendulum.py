@@ -31,8 +31,9 @@ class Pendulum:
             angularVelocity = 0,
             pendCoor = np.array([0, 0], dtype = 'float64')):
 
-        if np.float64(length) == 0:
-            raise ValueError("The length of a pendulum can't be zero.")
+        if np.float64(length) <= 0:
+            raise ValueError("The length of a pendulum must be greater than"
+                             " zero.")
 
         self.length = self.convertFloat(length)
         self.angle = self.convertFloat(angle)
@@ -49,11 +50,11 @@ class Pendulum:
 
     def normaliseAngle(self):
         """
-        Checks self.angle to see if it is within -pi to pi (inclusive),
-        if it isn't it'll add or subtract two pi until it is.
+        Checks self.angle to see if it is within -pi (exclusive) to
+        pi (inclusive), if it isn't it'll add or subtract two pi until it is.
         """
         while ((greater := self.angle > np.pi) or
-               (lesser := self.angle < -np.pi)):
+               (lesser := self.angle <= -np.pi)):
             if greater:
                 self.angle -= 2 * np.pi
             elif lesser:

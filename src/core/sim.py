@@ -100,13 +100,13 @@ def dESimplePendulumAngle(consts, angularVelocity):
 
 def simulatePendulum(pendulum,
                      intervalTime = 0.0125,
-                     g = 9.81,
+                     g = -9.81,
                      maxFrames = 2000):
     """
     Simulates the motion of a simple pendulum without a damping or driving
     force, uses the Runge Kutta algorithm to solve the differential equation
     for a simple pendulum. Produces x and y coordinates for the motion of the
-    pendulum.
+    pendulum. It will attempt to return one period of motion.
 
     Parameters
     ----------
@@ -118,7 +118,7 @@ def simulatePendulum(pendulum,
         The default is 0.0125.
     g : float, optional
         The gravitational acceleration in SI units.
-        The default is 9.81.
+        The default is -9.81.
     maxFrames : int, optional
         The maximum number of frames to simulate, only used in backup for when
         the period can't be determined.
@@ -144,18 +144,14 @@ def simulatePendulum(pendulum,
 
     loop = False
 
-    # This indicates how many times the pendulum has reached the maximum angle,
-    # if there is one.
     passedMax = 0
-    passedPi = 0
+    passedInit = 0
     while not loop:
         oldAngle = np.copy(pendulum.angle)
         oldAngularVelocity = np.copy(pendulum.angularVelocity)
 
-        x = pendulum.length * np.sin(pendulum.angle)
-        # Negative ensures that gravity visually appears to act down when
-        # plotted.
-        y = -pendulum.length * np.cos(pendulum.angle)
+        x = pendulum.length * np.sin(pendulum.angle) + pendulum.pendCoor[0]
+        y = pendulum.length * np.cos(pendulum.angle) + pendulum.pendCoor[1]
 
         positions[0].append(x)
         positions[1].append(y)
@@ -165,40 +161,46 @@ def simulatePendulum(pendulum,
             intervalTime, pendulum.angle, pendulum.angularVelocity,
             [g, pendulum.length])
 
-        # Keeps angles within less than or equal to pi and greater than or
-        # equal to -pi. Used to determine when to stop the simulation, because
-        # for certain situations the angle will continually increase, this
+        # Keeps angles within less than or equal to pi and greater than -pi.
+        # Used to determine when to stop the simulation, because
+        # for certain situations the angle will indefinitely increase, this
         # stops that.
         tempAngle = np.copy(pendulum.angle)
         pendulum.normaliseAngle()
-        if tempAngle != pendulum.angle and np.abs(initialAngle) == np.pi:
-            passedPi += 1
+
+        if ((oldAngularVelocity >= 0 and pendulum.angularVelocity < 0) or
+           (oldAngularVelocity <= 0 and pendulum.angularVelocity > 0)):
+            passedMax += 1
 
         # Determines when one full period has been completed, and stops
         # making new frames once this occurs.
-        if initialAngularVelocity == 0:
-            if initialAngle == 0 or np.abs(initialAngle) == np.pi or g == 0:
-                loop = True
-            elif ((oldAngularVelocity >= 0 and pendulum.angularVelocity < 0) or
-                  (oldAngularVelocity <= 0 and pendulum.angularVelocity > 0)):
-                passedMax += 1
-                if passedMax >= 3:
-                    loop = True
-        elif initialAngularVelocity != 0:
-            if (np.abs(initialAngle) != np.pi and
-                ((oldAngle <= initialAngle and pendulum.angle > initialAngle)
-                 or (oldAngle >= initialAngle and
-                     pendulum.angle < initialAngle))):
-
-                if passedPi > 1:
-                    loop = True
-                else:  # ALter this?
-                    passedPi += 1
-            elif passedPi > 1:
-                loop = True
-        else:
+        if len(positions[0]) == maxFrames:
             # Safeguard if other statements fail.
-            if len(positions[0]) == maxFrames:
+            loop = True
+        elif initialAngularVelocity == 0:
+            if (passedMax >= 3 or initialAngle == 0
+               or np.abs(initialAngle) == np.pi or g == 0):
+                # In the last three cases, the pendulum won't move.
+                loop = True
+        elif initialAngularVelocity != 0:
+            if len(positions[0]) != 1 and tempAngle != pendulum.angle:
+                if np.abs(initialAngle) != np.pi:
+                    # Passing pi triggers the if statement below,
+                    # this compensates.
+                    passedInit -= 1
+                else:
+                    # The if statement below never triggers if the inital angle
+                    # is pi, this compenstates.
+                    passedInit += 1
+
+            if ((oldAngle < initialAngle and pendulum.angle > initialAngle) or
+               (oldAngle > initialAngle and pendulum.angle < initialAngle)):
+                passedInit += 1
+
+            if ((passedMax == 0 and passedInit >= 1) or
+               (passedMax >= 1 and passedInit >= 2)):
+                # First case is for a pendulum completing full circles, second
+                # case is for pendulum swinging back and forth.
                 loop = True
 
     return positions
@@ -232,6 +234,8 @@ def produceAnimation(pendulum, positions, interval = 12.5):
     # IDE.
     fig, ax = plt.subplots(figsize = (5, 5))
 
+    pendX = pendulum.pendCoor[0]
+    pendY = pendulum.pendCoor[1]
     # Used to apply limits to the plots used in the animation, so that the
     # pendulum is fully within the plot.
     m = pendulum.length + 0.2 * pendulum.length
@@ -244,12 +248,12 @@ def produceAnimation(pendulum, positions, interval = 12.5):
         # look weird otherwise.
         ax.scatter(positions[0][frame], positions[1][frame],
                    color = 'black', zorder = 2)
-        ax.plot([positions[0][frame], pendulum.pendCoor[0]],
+        ax.plot([positions[0][frame], pendX],
                 [positions[1][frame], pendulum.pendCoor[1]],
                 color = 'brown', linestyle = '-', zorder = 1)
 
-        plt.xlim(-m, m)
-        plt.ylim(-m, m)
+        plt.xlim(-m + pendX, m + pendX)
+        plt.ylim(-m + pendY, m + pendY)
 
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = len(positions[0]),
