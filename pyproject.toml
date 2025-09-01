@@ -7,6 +7,9 @@ addopts = [
 [tool.ruff.lint]
 ignore = ["E251"]
 
+[tool.poetry]
+package-mode = false
+
 [project]
 name = "pendulum"
 version = "0.1.0"
