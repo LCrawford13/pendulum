@@ -3,3 +3,26 @@ pythonpath = "src"
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.ruff.lint]
+ignore = ["E251"]
+
+[project]
+name = "pendulum"
+version = "0.1.0"
+description = "Simulates the motion of a simple pendulum."
+authors = [
+    {name = "LCrawford13",email = "lukeaubyncrawford@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy (>=2.3.2,<3.0.0)",
+    "matplotlib (>=3.10.6,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
