@@ -36,9 +36,8 @@ jobs:
         run: poetry install --no-interaction
       - name: Lint with Ruff  
         run: |  
-          poetry ruff check -v
+          ruff check -v
         continue-on-error: true  
       - name: Test with pytest  
         run: |
           poetry run pytest  -v -s
-          coverage report
