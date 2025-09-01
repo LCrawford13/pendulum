@@ -15,6 +15,12 @@ pytest = "^8.0.0"
 ruff = "*"
 
 [project]
+name = "pendulum"
+version = "0.1.0"
+description = "Simulates the motion of a simple pendulum."
+authors = [
+    {name = "LCrawford13",email = "lukeaubyncrawford@gmail.com"}
+]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.12"
