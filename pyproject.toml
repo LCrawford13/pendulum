@@ -10,9 +10,6 @@ ignore = ["E251"]
 [tool.poetry]
 package-mode = false
 
-[tool.poetry.group.test.dependencies]
-ruff = "*"
-
 [project]
 name = "pendulum"
 version = "0.1.0"
