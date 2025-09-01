@@ -3,3 +3,6 @@ pythonpath = "src"
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.ruff.lint]
+ignore = ["E251"]
