@@ -28,11 +28,8 @@ jobs:
       - name: Lint with Ruff  
         run: |  
           pip install ruff  
-          ruff --format=github --target-version=py310 .  
+          ruff --format=github --target-version=py3127 .  
         continue-on-error: true  
       - name: Test with pytest  
         run: |  
-          coverage run -m pytest  -v -s  
-      - name: Generate Coverage Report  
-        run: |  
-          coverage report -m
+          run -m pytest  -v -s  
