@@ -8,7 +8,7 @@ addopts = [
 ignore = ["E251"]
 
 [tool.poetry]
-package-mode = false
+package-mode = true
 
 [project]
 name = "pendulum"
