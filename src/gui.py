@@ -1,2 +1,5 @@
-#Not in use yet.
-print("SDS")
+import PyQt5 as qt
+
+
+import site
+site.getsitepackages()

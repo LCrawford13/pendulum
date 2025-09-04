@@ -1,5 +1,5 @@
 # Pendulum
-This repository contains code allowing the simulation of a simple pendulum over one full period of motion. The data can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane.
+This repository contains code which simulates the motion of a simple pendulum over one full period of motion, it uses the Runge-Kutta algorithim. The data produced can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane.
 
 ## Table of Contents
 
