@@ -72,4 +72,4 @@ Email: lukeaubyncrawford@gmail.com
 
 ## Licence
 
-[Under MIT licence.](licence.md)
+[Under MIT licence.](LICENCE)
