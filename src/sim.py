@@ -258,7 +258,6 @@ def produceAnimation(pendulum, positions, interval = 12.5):
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = len(positions[0]),
                                   interval = interval)
-    plt.show()
 
     # Makes sure that the animation appears when using Spyder IDE. Not
     # necessary if the animation is being saved to a file.

@@ -27,7 +27,7 @@ def inputVal(name, value):
 
 # Allows user to edit values in the editor instead of using the text-based
 # interface.
-textInterface = True
+textInterface = False
 if textInterface:
     correctInputs = False
     while not correctInputs:
@@ -52,11 +52,7 @@ else:
     save = "file.mp4"
 
 pos = sim.simulatePendulum(pen, interval, g)
-
 ani = sim.produceAnimation(pen, pos, interval * 1000)
-
-# Nessecary?
-plt.draw()
 
 if save != "":
     filepath = userpaths.get_my_documents() + "\\Pendulum"
@@ -84,3 +80,5 @@ if save != "":
 
     mpl.rcParams['animation.ffmpeg_path'] = (mpeg)
     ani.save(save)
+
+plt.show()

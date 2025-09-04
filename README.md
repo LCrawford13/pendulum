@@ -42,11 +42,15 @@ If saving animations to mp4 files, then ffmpeg is needed: https://ffmpeg.org/dow
 
 ## Usage
 
-Run via an IDE, any python supported IDE will work, when running the animation should appear in a new window. However, this is not ideal, as this currently runs the animation too slowly, it's best to save it as an mp4 instead, which has no issues.
+It's best to run via an IDE, any python supported IDE will work. When running, the animation will appear in a new window. However, this is not ideal, as the pop-up window currently runs the animation too slowly, it's best to save it as an mp4 instead, which has no such issues.
 
-The file to run is src/main.py, it has a text-based user interface, or if desired, you can just change values in the editor.
+The file to run is src/main.py, it has a text-based user interface, or if desired, you can just change the values in an editor.
 
-Running from the terminal can be done, via `poetry run py src/main.py`. However, this method can't save the animation as a file.
+Running from the terminal can be done, via `poetry run py src/main.py`, run from the root. However, if saving the animation to a file, then the pop-up window with the animation fails to appear, while if not saving to a file, the pop-up window will appear but the terminal will hang, meaning you will have to restart the terminal to run the program again. It should be noted that the pop-up window has the same issues that running from an IDE has.
+
+[Picture of animation window](display/window.PNG)
+
+[Video of saved animation](display/video.mp4)
 
 ### Testing
 
@@ -64,4 +68,4 @@ Email: lukeaubyncrawford@gmail.com
 
 ## Licence
 
-Under MIT licence.
+[Under MIT licence.](licence.md)
