@@ -48,13 +48,13 @@ The file to run is src/main.py, it has a text-based user interface, or if desire
 
 Running from the terminal can be done, via `poetry run py src/main.py`, run from the root. However, if saving the animation to a file, then the pop-up window with the animation fails to appear, while if not saving to a file, the pop-up window will appear but the terminal will hang, meaning you will have to restart the terminal to run the program again. It should be noted that the pop-up window has the same issues that running from an IDE has.
 
-<h1>
-<img src="display/window.PNG">
-<img src="display/video.mp4">
-</h1><br>
-[Picture of animation window](display/window.PNG)
+Picture of animation pop-up window:
 
-[Video of saved animation](display/video.mp4)
+<img width="499" height="578" alt="window" src="https://github.com/user-attachments/assets/4bf0c436-5514-4a6d-9c28-046f82f8cc4a" />
+
+Video of full animation on default settings:
+
+https://github.com/user-attachments/assets/7d327dd5-6e8c-417a-903d-128b8165b4df
 
 ### Testing
 
