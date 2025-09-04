@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from Pendulum import Pendulum
 
 
 def RungeKutta(func1, func2, h, oldState1, oldState2, consts):
@@ -131,11 +132,23 @@ def simulatePendulum(pendulum,
         the motion of the pendulum, the list at index 1 contains the y
         coordinates.
     """
+    if not isinstance(pendulum, Pendulum):
+        raise ValueError("pendulum parameter must be a Pendulum object. Yet "
+                         f"it is {type(pendulum)}")
     # Time between calculations must be small.
     if intervalTime > 0.1:
         raise ValueError("Time between calculations must be "
                          "less than or equal to 0.1 seconds, it was "
                          f"instead {intervalTime} seconds.")
+    else:
+        intervalTime = np.float64(intervalTime)
+    # maxFrames must be positive.
+    if maxFrames <= 0:
+        raise ValueError("Maximum number of frames must be greater than or "
+                         f"equal to zero, yet it's {maxFrames}.")
+    else:
+        maxFrames = np.int64(maxFrames)
+    g = np.float64(g)
 
     positions = [[], []]
     pendulum.normaliseAngle()
@@ -258,7 +271,6 @@ def produceAnimation(pendulum, positions, interval = 12.5):
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = len(positions[0]),
                                   interval = interval)
-    plt.show()
 
     # Makes sure that the animation appears when using Spyder IDE. Not
     # necessary if the animation is being saved to a file.
