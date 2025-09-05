@@ -150,7 +150,7 @@ def simulatePendulum(pendulum,
         maxFrames = np.int64(maxFrames)
     g = np.float64(g)
 
-    positions = [[], []]
+    positions = []
     pendulum.normaliseAngle()
     initialAngle = np.copy(pendulum.angle)
     initialAngularVelocity = np.copy(pendulum.angularVelocity)
@@ -166,8 +166,7 @@ def simulatePendulum(pendulum,
         x = pendulum.length * np.sin(pendulum.angle) + pendulum.pendCoor[0]
         y = pendulum.length * np.cos(pendulum.angle) + pendulum.pendCoor[1]
 
-        positions[0].append(x)
-        positions[1].append(y)
+        positions.append([np.float64(x), np.float64(y)])
 
         pendulum.angle, pendulum.angularVelocity = RungeKutta(
             dESimplePendulumAngularVelocity, dESimplePendulumAngle,
@@ -219,7 +218,8 @@ def simulatePendulum(pendulum,
     return positions
 
 
-def produceAnimation(pendulum, positions, interval = 12.5):
+def produceAnimation(pendulum, positions, interval = 12.5,
+                     fig = None, ax = None):
     """
     Creates an animation from the x and y coordinates produced by the
     simulatePendulum function. The animation will appear with both a mass and
@@ -243,9 +243,10 @@ def produceAnimation(pendulum, positions, interval = 12.5):
     ani : matplotlib.animation.TimedAnimation
         The animation depicting the motion of the pendulum.
     """
-    # Specifiying figsize ensures that plot is square when opened in Spyder
-    # IDE.
-    fig, ax = plt.subplots(figsize = (5, 5))
+    if fig is None or ax is None:
+        # Specifiying figsize ensures that plot is square when opened in Spyder
+        # IDE.
+        fig, ax = plt.subplots(figsize = (5, 5), dpi = 200)
 
     pendX = pendulum.pendCoor[0]
     pendY = pendulum.pendCoor[1]
@@ -253,25 +254,25 @@ def produceAnimation(pendulum, positions, interval = 12.5):
     # pendulum is fully within the plot.
     m = pendulum.length + 0.2 * pendulum.length
 
+    # zorder ensures that the mass appears on top of the string, it would
+    # look weird otherwise.
+    mass = ax.scatter([], [], color = 'black', zorder = 2)
+    string = ax.plot([], [], color = 'brown', linestyle = '-', zorder = 1)[0]
+
+    ax.set_xlim(-m + pendX, m + pendX)
+    ax.set_ylim(-m + pendY, m + pendY)
+
     def update(frame):
-        # Removes previous positions of the pendulum from the animation.
-        ax.clear()
+        x = positions[frame][0]
+        y = positions[frame][1]
 
-        # zorder ensures that the mass appears on top of the string, it would
-        # look weird otherwise.
-        ax.scatter(positions[0][frame], positions[1][frame],
-                   color = 'black', zorder = 2)
-        ax.plot([positions[0][frame], pendX],
-                [positions[1][frame], pendulum.pendCoor[1]],
-                color = 'brown', linestyle = '-', zorder = 1)
-
-        plt.xlim(-m + pendX, m + pendX)
-        plt.ylim(-m + pendY, m + pendY)
+        mass.set_offsets([x, y])
+        string.set_xdata([x, pendX])
+        string.set_ydata([y, pendY])
 
     ani = animation.FuncAnimation(fig = fig, func = update,
-                                  frames = len(positions[0]),
+                                  frames = len(positions),
                                   interval = interval)
 
-    # Makes sure that the animation appears when using Spyder IDE. Not
-    # necessary if the animation is being saved to a file.
+    # Makes sure that the animation appears.
     return ani

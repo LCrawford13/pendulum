@@ -5,8 +5,10 @@ import matplotlib as mpl
 import userpaths
 import os
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
-# This file contains a text-based user interface, it's now obsolete.
+# This file contains a text-based user interface, it's now obsolete, aside for
+# testing purposes.
 
 length = 1
 angle = -np.pi / 2
