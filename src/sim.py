@@ -246,7 +246,7 @@ def produceAnimation(pendulum, positions, interval = 12.5,
     if fig is None or ax is None:
         # Specifiying figsize ensures that plot is square when opened in Spyder
         # IDE.
-        fig, ax = plt.subplots(figsize = (5, 5), dpi = 200)
+        fig, ax = plt.subplots(figsize = (5, 5), dpi = 150)
 
     pendX = pendulum.pendCoor[0]
     pendY = pendulum.pendCoor[1]

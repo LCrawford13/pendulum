@@ -5,7 +5,7 @@ import matplotlib as mpl
 import userpaths
 import os
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
+
 
 # This file contains a text-based user interface, it's now obsolete, aside for
 # testing purposes.
@@ -30,7 +30,7 @@ def inputVal(name, value):
 
 # Allows user to edit values in the editor instead of using the text-based
 # interface.
-textInterface = False
+textInterface = True
 if textInterface:
     correctInputs = False
     while not correctInputs:

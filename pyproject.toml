@@ -12,7 +12,7 @@ package-mode = false
 
 [project]
 name = "pendulum"
-version = "0.1.0"
+version = "0.5.0"
 description = "Simulates the motion of a simple pendulum."
 authors = [
     {name = "LCrawford13",email = "lukeaubyncrawford@gmail.com"}
