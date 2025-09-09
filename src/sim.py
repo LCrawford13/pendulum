@@ -215,7 +215,7 @@ def simulatePendulum(pendulum,
                 # case is for pendulum swinging back and forth.
                 loop = True
 
-    return positions
+    return np.float64(positions)
 
 
 def produceAnimation(pendulum, positions, interval = 12.5,
@@ -236,7 +236,7 @@ def produceAnimation(pendulum, positions, interval = 12.5,
         coordinates.
     interval : float, optional
         The time bewteen frames, in milliseconds.
-        The default is 0.0125, so 80fps.
+        The default is 12.5, so 80fps.
 
     Returns
     -------
@@ -256,11 +256,11 @@ def produceAnimation(pendulum, positions, interval = 12.5,
 
     # zorder ensures that the mass appears on top of the string, it would
     # look weird otherwise.
-    mass = ax.scatter([], [], color = 'black', zorder = 2)
+    mass = ax.scatter([], [],
+                      color = 'black', zorder = 2)
     string = ax.plot([], [], color = 'brown', linestyle = '-', zorder = 1)[0]
 
-    ax.set_xlim(-m + pendX, m + pendX)
-    ax.set_ylim(-m + pendY, m + pendY)
+    ax.set(xlim = [-m + pendX, m + pendX], ylim = [-m + pendY, m + pendY])
 
     def update(frame):
         x = positions[frame][0]
@@ -269,6 +269,8 @@ def produceAnimation(pendulum, positions, interval = 12.5,
         mass.set_offsets([x, y])
         string.set_xdata([x, pendX])
         string.set_ydata([y, pendY])
+
+        return (mass, string, )
 
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = len(positions),

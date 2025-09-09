@@ -1,10 +1,10 @@
 from Pendulum import Pendulum
-import sim
-import numpy as np
-import matplotlib as mpl
-import userpaths
-import os
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+import userpaths
+import sim
+import os
 
 
 # This file contains a text-based user interface, it's now obsolete, aside for

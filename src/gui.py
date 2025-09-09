@@ -1,13 +1,13 @@
-import sim
-import os
-import userpaths
-import numpy as np
-import matplotlib as mpl
-from Pendulum import Pendulum
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5 import uic
+from Pendulum import Pendulum
+import matplotlib as mpl
+import numpy as np
+import userpaths
+import sim
+import os
 
 mpl.use('Qt5Agg')
 
@@ -41,6 +41,11 @@ class MainWindow(QMainWindow):
         self.checkFfmpegFilePath()
 
     def simulate(self):
+        """
+        Occurs when the user clicks the applyButton, this will generate an
+        animation based on the values in the various spin boxes, and then
+        display this animation to the user.
+        """
         self.toggleButton(self.applyButton, False)
         self.toggleButton(self.saveButton, True)
 
@@ -56,7 +61,12 @@ class MainWindow(QMainWindow):
             pen = Pendulum(length, angle, angularVelocity, pendCoor)
             pos = sim.simulatePendulum(pen, interval, g)
 
-            self.canvas.figure.clf()
+            if hasattr(self, 'ani'):
+                self.canvas.figure.clf()
+                self.ani.pause()
+                # If the user has played more than one animation this session,
+                # then the previous animation needs to stop playing.
+
             ax = self.canvas.figure.add_subplot(111)
 
             self.ani = sim.produceAnimation(pen, pos, interval * 1000,
@@ -67,6 +77,12 @@ class MainWindow(QMainWindow):
             self.errorLabel.setText(str(e))
 
     def save(self):
+        """
+        Occurs when the user clicks the saveButton, this will save the
+        animation which is currently being shown to the user to an mp4 file,
+        the name and location of the file will be given by the user through
+        a file dialog window.
+        """
         try:
             if self.setting != "":
                 fileDialog = QFileDialog(self)
@@ -85,6 +101,10 @@ class MainWindow(QMainWindow):
             self.errorLabel.setText(str(e))
 
     def changeFfmpegFilePath(self):
+        """
+        Occurs when user clicks ffmpegButton, resulting in a file dialog window
+        allowing the user to select the file path to ffmpeg.exe.
+        """
         try:
             fileDialog = QFileDialog(self)
             fileDialog.setWindowTitle("Find ffmpeg")
@@ -99,6 +119,18 @@ class MainWindow(QMainWindow):
             self.errorLabel.setText(str(e))
 
     def checkFfmpegFilePath(self, ffmpegFilePath = ""):
+        """
+        Checks to see if the user has previously set the file path of
+        ffmpeg.exe. If they have, then it tells matplotlib the file path.
+        Otherwise it creates a settings.ini in the user's my documents.
+
+        Parameters
+        ----------
+        ffmpegFilePath : String, optional
+            If not equal to "", then it means the user has entered the file
+            path of ffmpeg, which will then be written into settings.ini.
+            The default is "".
+        """
         filepath = userpaths.get_my_documents() + "\\Pendulum"
 
         # If file doesn't exsist create it.
@@ -123,6 +155,14 @@ class MainWindow(QMainWindow):
         file.close()
 
     def closeEvent(self, event):
+        """
+        For a subclass of QMainWindow, closeEvent will fire when the subclass
+        is closed. In this case, it makes sure that animations based on
+        matplotlib are disposed off.
+        """
+        if hasattr(self, 'ani'):
+            self.ani.pause()
+            # Stops animations from continuing in background.
         self.canvas.figure.clf()
 
     @staticmethod
