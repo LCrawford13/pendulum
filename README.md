@@ -60,6 +60,14 @@ https://github.com/user-attachments/assets/7d327dd5-6e8c-417a-903d-128b8165b4df
 
 Pytest is used for testing, just run `poetry run pytest` at the project directory, this will run all unit tests.
 
+### Updating GUI
+
+In a terminal go to the project directory/src, the run `pyuic5 -o ui_gui.py gui.ui`.
+
+### Updating Exectuable
+
+In a terminal, from the project directory run `poetry run pyinstaller pendulum.spec`.
+
 ## Contributing
 
 Contributions aren't excepted at this time.

@@ -1,7 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 from Pendulum import Pendulum
+
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def RungeKutta(func1, func2, h, oldState1, oldState2, consts):
@@ -256,8 +257,7 @@ def produceAnimation(pendulum, positions, interval = 12.5,
 
     # zorder ensures that the mass appears on top of the string, it would
     # look weird otherwise.
-    mass = ax.scatter([], [],
-                      color = 'black', zorder = 2)
+    mass = ax.scatter([], [], color = 'black', zorder = 2)
     string = ax.plot([], [], color = 'brown', linestyle = '-', zorder = 1)[0]
 
     ax.set(xlim = [-m + pendX, m + pendX], ylim = [-m + pendY, m + pendY])
@@ -274,7 +274,7 @@ def produceAnimation(pendulum, positions, interval = 12.5,
 
     ani = animation.FuncAnimation(fig = fig, func = update,
                                   frames = len(positions),
-                                  interval = interval)
+                                  interval = interval, blit = True)
 
     # Makes sure that the animation appears.
     return ani

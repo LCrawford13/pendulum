@@ -1,13 +1,14 @@
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5 import uic
+from ui_gui import Ui_MainWindow
 from Pendulum import Pendulum
+from os import mkdir
+
 import matplotlib as mpl
 import numpy as np
 import userpaths
 import sim
-import os
 
 mpl.use('Qt5Agg')
 
@@ -15,28 +16,29 @@ mpl.use('Qt5Agg')
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        uic.loadUi('gui.ui', self)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
         self.canvas = FigureCanvasQTAgg(Figure(figsize = (5, 5), dpi = 150))
-        self.vLayout.addWidget(self.canvas)
+        self.ui.vLayout.addWidget(self.canvas)
 
-        self.lengthSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.gSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.angleSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.angularVelocitySpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.xSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.ySpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.intervalSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.applyButton, True))
-        self.applyButton.clicked.connect(self.simulate)
-        self.saveButton.clicked.connect(self.save)
-        self.ffmpegButton.clicked.connect(self.changeFfmpegFilePath)
+        self.ui.lengthSpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.gSpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.angleSpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.angularVelocitySpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.xSpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.ySpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.intervalSpinBox.valueChanged['double'].connect(
+            lambda: self.toggleButton(self.ui.applyButton, True))
+        self.ui.applyButton.clicked.connect(self.simulate)
+        self.ui.saveButton.clicked.connect(self.save)
+        self.ui.ffmpegButton.clicked.connect(self.changeFfmpegFilePath)
 
         self.checkFfmpegFilePath()
 
@@ -46,17 +48,18 @@ class MainWindow(QMainWindow):
         animation based on the values in the various spin boxes, and then
         display this animation to the user.
         """
-        self.toggleButton(self.applyButton, False)
-        self.toggleButton(self.saveButton, True)
+        self.toggleButton(self.ui.applyButton, False)
+        self.toggleButton(self.ui.saveButton, True)
+        self.ui.errorLabel.setText("")
 
         # Try and except needed in case the user inputs an incorrect value.
         try:
-            length = self.lengthSpinBox.value()
-            g = self.gSpinBox.value()
-            angle = self.angleSpinBox.value() * np.pi
-            angularVelocity = self.angularVelocitySpinBox.value()
-            pendCoor = [self.xSpinBox.value(), self.ySpinBox.value()]
-            interval = self.intervalSpinBox.value()
+            length = self.ui.lengthSpinBox.value()
+            g = self.ui.gSpinBox.value()
+            angle = self.ui.angleSpinBox.value() * np.pi
+            angularVelocity = self.ui.angularVelocitySpinBox.value()
+            pendCoor = [self.ui.xSpinBox.value(), self.ui.ySpinBox.value()]
+            interval = self.ui.intervalSpinBox.value()
 
             pen = Pendulum(length, angle, angularVelocity, pendCoor)
             pos = sim.simulatePendulum(pen, interval, g)
@@ -74,7 +77,7 @@ class MainWindow(QMainWindow):
 
             self.canvas.draw()
         except Exception as e:
-            self.errorLabel.setText(str(e))
+            self.ui.errorLabel.setText(str(e))
 
     def save(self):
         """
@@ -83,6 +86,8 @@ class MainWindow(QMainWindow):
         the name and location of the file will be given by the user through
         a file dialog window.
         """
+        self.ui.errorLabel.setText("")
+
         try:
             if self.setting != "":
                 fileDialog = QFileDialog(self)
@@ -98,13 +103,15 @@ class MainWindow(QMainWindow):
             else:
                 raise Exception("Needs file path for ffmpeg.exe.")
         except Exception as e:
-            self.errorLabel.setText(str(e))
+            self.ui.errorLabel.setText(str(e))
 
     def changeFfmpegFilePath(self):
         """
         Occurs when user clicks ffmpegButton, resulting in a file dialog window
         allowing the user to select the file path to ffmpeg.exe.
         """
+        self.ui.errorLabel.setText("")
+
         try:
             fileDialog = QFileDialog(self)
             fileDialog.setWindowTitle("Find ffmpeg")
@@ -116,7 +123,7 @@ class MainWindow(QMainWindow):
                 selectedFiles = fileDialog.selectedFiles()
                 self.checkFfmpegFilePath(selectedFiles[0])
         except Exception as e:
-            self.errorLabel.setText(str(e))
+            self.ui.errorLabel.setText(str(e))
 
     def checkFfmpegFilePath(self, ffmpegFilePath = ""):
         """
@@ -135,7 +142,7 @@ class MainWindow(QMainWindow):
 
         # If file doesn't exsist create it.
         try:
-            os.mkdir(filepath)
+            mkdir(filepath)
         except FileExistsError:
             pass
 

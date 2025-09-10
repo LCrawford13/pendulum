@@ -1,4 +1,5 @@
 from Pendulum import Pendulum
+
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -30,7 +31,7 @@ def inputVal(name, value):
 
 # Allows user to edit values in the editor instead of using the text-based
 # interface.
-textInterface = True
+textInterface = False
 if textInterface:
     correctInputs = False
     while not correctInputs:
@@ -52,7 +53,7 @@ if textInterface:
                  "filepath\\\\filename.mp4, otherwise press enter.")
 else:
     pen = Pendulum(length, angle, angularVelocity, pendCoor)
-    save = "file.mp4"
+    save = ""
 
 pos = sim.simulatePendulum(pen, interval, g)
 ani = sim.produceAnimation(pen, pos, interval * 1000)
