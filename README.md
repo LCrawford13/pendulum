@@ -1,5 +1,5 @@
 # Pendulum
-This repository contains code which simulates the motion of a simple pendulum over one full period of motion, it uses the Runge-Kutta algorithim. The data produced can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane.
+This repository contains code which simulates the motion of a simple pendulum over one full period of motion, it uses the Runge-Kutta algorithim. The data produced can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane. The animation can be viewed and the initial conditions altered in a GUI, and the animation can be saved as an mp4 file.
 
 ## Table of Contents
 
@@ -9,6 +9,8 @@ This repository contains code which simulates the motion of a simple pendulum ov
     - [Prerequisites](#prerequisites)
   - [Usage](#usage)
     - [Testing](#testing)
+    - [Updating GUI](#updating-gui)
+    - [Updating Exectuable](#updating-exectuable)
   - [Contributing](#contributing)
   - [Contacts](#contacts)
   - [Licence](#licence)
@@ -20,21 +22,23 @@ To install, clone the repository:
 git clone https://github.com/LCrawford13/pendulum.git
 ```
 
+It's recommended to use a fresh python environment, but if you're using an Anaconda Spyder environment, remove the PyQt5 and PyQt5-Qt5 dependencies from pyproject.toml, otherwise when running Spyder you'll get a "This application failed to start because no Qt platform plugin could be initialized." error.
+
 Use poetry on the directory of the clone:
 ```shell
 poetry install
 ```
 
-If getting exit code status 9009, run this:
+If you get exit code status 9009, run this:
 ```shell
 poetry config virtualenvs.use-poetry-python true
 ```
 
-Note: I am unaware if this will work on OS's other than Windows.
+Note: I am unaware if this project will work on OS's other than Windows.
 
 ### Prerequisites
 
-Python (>=3.13.5) is required.
+Python (>=3.12) is required.
 
 Poetry is required, for the automatic installation of dependencies, https://python-poetry.org/docs/#installing-with-the-official-installer. 
 
@@ -42,11 +46,9 @@ If saving animations to mp4 files, then ffmpeg is needed: https://ffmpeg.org/dow
 
 ## Usage
 
-It's best to run via an IDE, any python supported IDE will work. When running, the animation will appear in a new window and/or it can be saved as an mp4 file.
+It's best to run via an IDE, any python supported IDE will work. The file to run is src/main.py, it has a GUI, with all initial conditions having spin boxes to edit them. It can also be run in a terminal, at the project root directory, run `poetry run py src/main.py`.
 
-The file to run is src/main.py, it has a text-based user interface, or if desired, you can just change the values in an editor.
-
-Running from the terminal can be done, via `poetry run py src/main.py`, run from the root. However, if saving the animation to a file, then the pop-up window with the animation fails to appear, while if not saving to a file, the pop-up window will appear but the terminal will hang, meaning you will have to restart the terminal to run the program again.
+src/txtMain.py also has a text-based user interface, or if desired, you can just change the values in an editor. txtMain.py isn't supported anymore, but it can be useful when doing minor tests. Running from the terminal can be done, via `poetry run py src/txtMain.py`, run from the root. However, if saving the animation to a file, then the pop-up window with the animation fails to appear, while if not saving to a file, the pop-up window will appear but the terminal will hang, meaning you will have to restart the terminal to run the program again.
 
 Picture of animation pop-up window:
 
@@ -75,8 +77,6 @@ Contributions aren't excepted at this time.
 ## Contacts
 
 Github: [LCrawford13](https://github.com/LCrawford13)
-
-Email: lukeaubyncrawford@gmail.com
 
 ## Licence
 

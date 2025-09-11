@@ -126,6 +126,22 @@
             <property name="verticalSpacing">
              <number>7</number>
             </property>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="lengthSpinBox">
+              <property name="styleSheet">
+               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
+              </property>
+              <property name="decimals">
+               <number>4</number>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
             <item row="5" column="1">
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <property name="spacing">
@@ -135,6 +151,15 @@
                <widget class="QDoubleSpinBox" name="xSpinBox">
                 <property name="styleSheet">
                  <string notr="true">font: 9pt &quot;Arial&quot;;</string>
+                </property>
+                <property name="wrapping">
+                 <bool>false</bool>
+                </property>
+                <property name="frame">
+                 <bool>true</bool>
+                </property>
+                <property name="accelerated">
+                 <bool>false</bool>
                 </property>
                 <property name="decimals">
                  <number>4</number>
@@ -164,22 +189,6 @@
                </widget>
               </item>
              </layout>
-            </item>
-            <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="lengthSpinBox">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="decimals">
-               <number>4</number>
-              </property>
-              <property name="maximum">
-               <double>1000.000000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.000000000000000</double>
-              </property>
-             </widget>
             </item>
             <item row="2" column="1">
              <widget class="QDoubleSpinBox" name="gSpinBox">
@@ -220,52 +229,6 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
-             <widget class="QDoubleSpinBox" name="intervalSpinBox">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="decimals">
-               <number>4</number>
-              </property>
-              <property name="singleStep">
-               <double>0.002500000000000</double>
-              </property>
-              <property name="value">
-               <double>0.012500000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="text">
-               <string>Initial Angular Velocity:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="text">
-               <string>Gravitational Accleration:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="text">
-               <string>Time Interval:</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label">
               <property name="styleSheet">
@@ -273,28 +236,6 @@
               </property>
               <property name="text">
                <string>Pendulum Length:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QDoubleSpinBox" name="angleSpinBox">
-              <property name="styleSheet">
-               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="decimals">
-               <number>4</number>
-              </property>
-              <property name="minimum">
-               <double>-1.000000000000000</double>
-              </property>
-              <property name="maximum">
-               <double>1.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.200000000000000</double>
-              </property>
-              <property name="value">
-               <double>-0.500000000000000</double>
               </property>
              </widget>
             </item>
@@ -327,6 +268,48 @@
               </property>
               <property name="text">
                <string>Initial Angle (in terms of pi):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="angleSpinBox">
+              <property name="styleSheet">
+               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
+              </property>
+              <property name="decimals">
+               <number>4</number>
+              </property>
+              <property name="minimum">
+               <double>-1.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.200000000000000</double>
+              </property>
+              <property name="value">
+               <double>-0.500000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="styleSheet">
+               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
+              </property>
+              <property name="text">
+               <string>Gravitational Accleration:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="styleSheet">
+               <string notr="true">font: 9pt &quot;Arial&quot;;</string>
+              </property>
+              <property name="text">
+               <string>Initial Angular Velocity:</string>
               </property>
              </widget>
             </item>

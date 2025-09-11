@@ -34,8 +34,6 @@ class MainWindow(QMainWindow):
             lambda: self.toggleButton(self.ui.applyButton, True))
         self.ui.ySpinBox.valueChanged['double'].connect(
             lambda: self.toggleButton(self.ui.applyButton, True))
-        self.ui.intervalSpinBox.valueChanged['double'].connect(
-            lambda: self.toggleButton(self.ui.applyButton, True))
         self.ui.applyButton.clicked.connect(self.simulate)
         self.ui.saveButton.clicked.connect(self.save)
         self.ui.ffmpegButton.clicked.connect(self.changeFfmpegFilePath)
@@ -59,7 +57,11 @@ class MainWindow(QMainWindow):
             angle = self.ui.angleSpinBox.value() * np.pi
             angularVelocity = self.ui.angularVelocitySpinBox.value()
             pendCoor = [self.ui.xSpinBox.value(), self.ui.ySpinBox.value()]
-            interval = self.ui.intervalSpinBox.value()
+            interval = 0.0125
+            # Interval is not changable by the user due to issues with
+            # matplotlibs GUI backends, meaning different intervals in the
+            # animation resulting in the animation running at different
+            # speeds to what it should.
 
             pen = Pendulum(length, angle, angularVelocity, pendCoor)
             pos = sim.simulatePendulum(pen, interval, g)
