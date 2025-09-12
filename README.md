@@ -1,5 +1,7 @@
 # Pendulum
-This repository contains code which simulates the motion of a simple pendulum over one full period of motion, it uses the Runge-Kutta algorithim. The data produced can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane. The animation can be viewed and the initial conditions altered in a GUI, and the animation can be saved as an mp4 file.
+This repository contains code which simulates the motion of a simple pendulum over one full period of motion, it uses the Runge-Kutta algorithim. The data produced can then also be used to produce an animation of the simulation. The length, gravitational acceleration, initial angle, initial angular velocity and the position of the pivot can all be specified, all only on a 2D plane. The animation can be viewed and the initial conditions altered in a GUI, and the animation can be saved as an mp4 file. A brief demonstration:
+
+https://github.com/user-attachments/assets/c15d6c70-d088-4e33-af1c-cc67aa637042
 
 ## Table of Contents
 
@@ -46,7 +48,9 @@ If saving animations to mp4 files, then ffmpeg is needed: https://ffmpeg.org/dow
 
 ## Usage
 
-It's best to run via an IDE, any python supported IDE will work. The file to run is src/main.py, it has a GUI, with all initial conditions having spin boxes to edit them. It can also be run in a terminal, at the project root directory, run `poetry run py src/main.py`.
+If you don't want to changed the code in any way, just download the latest release and go to pendulum/dist and run pendulum.exe.
+
+Otherwise, it's best to run via an IDE, any python supported IDE will work. The file to run is src/main.py, it has a GUI, with all initial conditions having spin boxes to edit them. It can also be run in a terminal, at the project root directory, run `poetry run py src/main.py`.
 
 src/txtMain.py also has a text-based user interface, or if desired, you can just change the values in an editor. txtMain.py isn't supported anymore, but it can be useful when doing minor tests. Running from the terminal can be done, via `poetry run py src/txtMain.py`, run from the root. However, if saving the animation to a file, then the pop-up window with the animation fails to appear, while if not saving to a file, the pop-up window will appear but the terminal will hang, meaning you will have to restart the terminal to run the program again.
 
