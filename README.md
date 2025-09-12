@@ -64,7 +64,7 @@ Pytest is used for testing, just run `poetry run pytest` at the project director
 
 ### Updating GUI
 
-In a terminal go to the project directory/src, the run `pyuic5 -o ui_gui.py gui.ui`.
+In a terminal go to the project directory/src, then run `pyuic5 -o ui_gui.py gui.ui`.
 
 ### Updating Exectuable
 

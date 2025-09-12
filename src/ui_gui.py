@@ -197,6 +197,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.lengthSpinBox, self.gSpinBox)
+        MainWindow.setTabOrder(self.gSpinBox, self.angleSpinBox)
+        MainWindow.setTabOrder(self.angleSpinBox, self.angularVelocitySpinBox)
+        MainWindow.setTabOrder(self.angularVelocitySpinBox, self.xSpinBox)
+        MainWindow.setTabOrder(self.xSpinBox, self.ySpinBox)
+        MainWindow.setTabOrder(self.ySpinBox, self.applyButton)
+        MainWindow.setTabOrder(self.applyButton, self.saveButton)
+        MainWindow.setTabOrder(self.saveButton, self.ffmpegButton)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

@@ -453,6 +453,17 @@ color: rgb(255, 0, 0);</string>
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lengthSpinBox</tabstop>
+  <tabstop>gSpinBox</tabstop>
+  <tabstop>angleSpinBox</tabstop>
+  <tabstop>angularVelocitySpinBox</tabstop>
+  <tabstop>xSpinBox</tabstop>
+  <tabstop>ySpinBox</tabstop>
+  <tabstop>applyButton</tabstop>
+  <tabstop>saveButton</tabstop>
+  <tabstop>ffmpegButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
