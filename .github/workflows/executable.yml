@@ -2,14 +2,15 @@ name: Create Executable via Pyinstaller
 
 on:
   release:
+    types: [created]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:  
       matrix:  
-        python-version: ["3.13.5"]
+        python-version: ["3.13.7"]
         
     steps:
       - uses: actions/checkout@v4
@@ -33,3 +34,9 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Create executable
         run: poetry run pyinstaller pendulum.spec
+      - name: Add Folders to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            pendulum/dist
+            pendulum/build
