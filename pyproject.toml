@@ -7,24 +7,27 @@ addopts = [
 [tool.ruff.lint]
 ignore = ["E251"]
 
-[tool.poetry]
-package-mode = false
+[tool.ruff]
+line-length = 79
 
 [project]
 name = "pendulum"
-version = "0.1.0"
+version = "0.5.0"
 description = "Simulates the motion of a simple pendulum."
 authors = [
-    {name = "LCrawford13",email = "lukeaubyncrawford@gmail.com"}
+    {name = "LCrawford13"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "numpy (>=2.3.2,<3.0.0)",
     "matplotlib (>=3.10.6,<4.0.0)",
     "pytest (>=8.3.3,<9.0.0)",
-    "userpaths (>=0.1.3,<0.2.0)"
+    "userpaths (>=0.1.3,<0.2.0)",
+    "PyQt5 (>=5.15.11,<6.0.0)",
+    "PyQt5-Qt5 (>=5.15.2,<5.15.11)",
+    "pyinstaller (>=6.15.0,<7.0.0)"
 ]
 
 
