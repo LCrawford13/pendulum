@@ -33,9 +33,11 @@ jobs:
       - name: Add poetry path
         run: echo "C:\Users\runneradmin\.local\bin" >> $GITHUB_PATH
       - name: Install dependencies
-        run: bash poetry install --no-interaction --no-root
+        shell: bash
+        run: poetry install --no-interaction --no-root
       - name: Create executable
-        run: bash poetry run pyinstaller pendulum.spec
+        shell: bash
+        run: poetry run pyinstaller pendulum.spec
       - name: Zip dist Folder
         run: Compress-Archive -Path ${{ github.workspace }}\dist\pendulum\* -Destination ${{ github.workspace }}\dist\pendulum.zip
       - name: Add Folders to Release
