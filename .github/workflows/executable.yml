@@ -48,3 +48,4 @@ jobs:
           files: |
             ${{ github.workspace }}\build\*
             ${{ github.workspace }}\dist\*
+            ${{ github.workspace }}\dist\pendulum\pendulum.exe
