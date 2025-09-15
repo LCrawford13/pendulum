@@ -19,7 +19,9 @@ https://github.com/user-attachments/assets/c15d6c70-d088-4e33-af1c-cc67aa637042
 
 ## Setup
 
-To install, clone the repository:
+If you just want to use the GUI, go to the latest release, download pendulum.zip, unpack, and run pendulum.exe.
+
+Otherwise, clone the repository:
 ```shell
 git clone https://github.com/LCrawford13/pendulum.git
 ```
@@ -48,7 +50,7 @@ If saving animations to mp4 files, then ffmpeg is needed: https://ffmpeg.org/dow
 
 ## Usage
 
-If you don't want to changed the code in any way, just download the latest release and go to pendulum/dist and run pendulum.exe.
+If you don't want to change the code in any way, just run pendulum.exe, as described in the [setup section](#setup).
 
 Otherwise, it's best to run via an IDE, any python supported IDE will work. The file to run is src/main.py, it has a GUI, with all initial conditions having spin boxes to edit them. It can also be run in a terminal, at the project root directory, run `poetry run py src/main.py`.
 
