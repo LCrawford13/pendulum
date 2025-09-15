@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
 
         file = open(filepath + "\\settings.ini", "a+")
 
-        if ffmpegFilePath != "":
+        if ffmpegFilePath != "" and self.setting == "":
             file.write("ffmpegPath = " + ffmpegFilePath)
 
         # Sets pointer to start of file.
