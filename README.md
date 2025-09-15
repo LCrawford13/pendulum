@@ -3,6 +3,8 @@ This repository contains code which simulates the motion of a simple pendulum ov
 
 https://github.com/user-attachments/assets/c15d6c70-d088-4e33-af1c-cc67aa637042
 
+It should be noted that due to limitations with matplotlib's in-built animation viewer (or atleast I believe that this is the case), the animations diplayed in the GUI and animation pop-up windows (if using the text-based interface), won't necessarily have the correct durations, to view the animations with the correct durations, save the animation to an mp4.
+
 ## Table of Contents
 
 - [Pendulum](#pendulum)
