@@ -47,4 +47,4 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            ${{ github.workspace }}\dist\pendulum.zip
+            ${{ github.workspace }}\dist\pendulum${github.ref}.zip
