@@ -40,9 +40,4 @@ jobs:
       - name: Create executable
         run: poetry run pyinstaller pendulum.spec
       - name: Add Folders to Release
-        uses: softprops/action-gh-release@v2
-        if: github.ref_type == 'tag'
-        with:
-          files: |
-            ${{ github.workspace }}/build/*
-            ${{ github.workspace }}/dist/*
+        run: gh release upload $GITHUB_REF ${{ github.workspace }}\build\* ${{ github.workspace }}\dist\*
