@@ -1,0 +1,3 @@
+- Move sim.py::simulate to pendulum class.
+- Integrate video player into GUI, so that animations will have the correct duration, enabled or disabled via a toggle.
+- Rewrite Runge-Kutta algorithim to make it more general, so that driving and damping forces can be added.
