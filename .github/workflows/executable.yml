@@ -44,5 +44,5 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            pendulum/dist
-            pendulum/build
+            D:\a\pendulum\pendulum\dist
+            D:\a\pendulum\pendulum\build
