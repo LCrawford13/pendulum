@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: window-latest
+    runs-on: windows-latest
     strategy:  
       matrix:  
         python-version: ["3.13.7"]
@@ -36,3 +36,9 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Create executable
         run: poetry run pyinstaller pendulum.spec
+      - name: Add Folders to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            pendulum/dist
+            pendulum/build
