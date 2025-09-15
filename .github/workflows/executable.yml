@@ -39,6 +39,8 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Create executable
         run: poetry run pyinstaller pendulum.spec
+      - name: Zip dist Folder
+      - run: zip -r ${{ github.workspace }}\dist\pendulum.zip ${{ github.workspace }}\dist\pendulum
       - name: Add Folders to Release
         uses: softprops/action-gh-release@v2
         env:
@@ -46,6 +48,4 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            ${{ github.workspace }}\build\*
-            ${{ github.workspace }}\dist\*
-            ${{ github.workspace }}\dist\pendulum\pendulum.exe
+            ${{ github.workspace }}\dist\pendulum.zip
