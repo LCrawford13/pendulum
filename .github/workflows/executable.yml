@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
     strategy:  
       matrix:  
         python-version: ["3.13.7"]
@@ -40,7 +37,7 @@ jobs:
       - name: Create executable
         run: poetry run pyinstaller pendulum.spec
       - name: Zip dist Folder
-        run: zip -r ${{ github.workspace }}\dist\pendulum.zip ${{ github.workspace }}\dist\pendulum
+        run: Compress-Archive -Path ${{ github.workspace }}\dist\pendulum\* -Destination ${{ github.workspace }}\dist\pendulum.zip
       - name: Add Folders to Release
         uses: softprops/action-gh-release@v2
         env:
