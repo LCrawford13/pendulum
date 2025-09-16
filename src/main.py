@@ -5,8 +5,9 @@ import sys
 
 
 if __name__ == "__main__":
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling,
+                                        True)
     app = QtWidgets.QApplication(sys.argv)
-    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     window = MainWindow()
     window.show()
     window.raise_()
