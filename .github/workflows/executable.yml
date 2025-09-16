@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: poetry run pyinstaller pendulum.spec
       - name: Zip dist Folder
-        run: Compress-Archive -Path ${{ github.workspace }}\dist\pendulum\* -Destination ${{ github.workspace }}\dist\pendulum${{  github.ref_name }}.zip
+        run: Compress-Archive -Path ${{ github.workspace }}\dist\pendulum\* -Destination ${{ github.workspace }}\dist\pendulum_${{  github.ref_name }}.zip
       - name: Add Folders to Release
         uses: softprops/action-gh-release@v2
         env:
@@ -47,4 +47,4 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            ${{ github.workspace }}\dist\pendulum${{  github.ref_name }}.zip
+            ${{ github.workspace }}\dist\pendulum_${{  github.ref_name }}.zip
